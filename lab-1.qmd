@@ -38,7 +38,7 @@ First, let's make sure you know how to use Markdown formatting to style a Quarto
 
 ```{r}
 #| echo: false
-#| lable: 
+#| label: mileage-boxplot
 
 ggplot(data = mpg, 
        mapping = aes(y = manufacturer, x = hwy)) + 
@@ -53,6 +53,7 @@ ggplot(data = mpg,
 
 ```{r}
 #| message: false
+#| label: mileage-ridge
 
 ggplot(data = mpg, 
        mapping = aes(y = manufacturer, x = hwy)) + 
@@ -67,7 +68,9 @@ ggplot(data = mpg,
 
 ```{r}
 
+#| label: sidebyside
 #| ncol: 2
+#| nrow: 1
 
 ggplot(data = mpg, 
        mapping = aes(y = manufacturer, x = hwy)) + 
@@ -84,15 +87,15 @@ ggplot(data = mpg,
        y = "", 
        title = "Highway Milage (mpg) for Different Car Manufacturers"
        )
-
 ```
 
 8.  Using code chunk options, make it so this chunk shows the code but not the output:
 
 ```{r}
 
-#| echo: true
-#| results: "hide"
+#| eval: false
+#| label: sum
+
 2 + 2
 ```
 
@@ -100,6 +103,8 @@ ggplot(data = mpg,
 
 ```{r}
 #| error: true
+#| label: error
+
 2 + a
 ```
 
@@ -115,19 +120,27 @@ For these problems, we will continue to work with the `mpg` data frame, making v
 
 ```{r}
 
+mpg <- mpg |>
+  mutate(fuel_type = if_else(fl %in% c("p", "r", "d"), "petrol", "alternative energy")); head(mpg)
 ```
 
-12. The `drv` variable describes if the car has front drive (`f`), rear drive (`r`), or four wheel drive (`4`). Let's make better labels for these values! Specifically, use the `case_when()` function to change the `drv` varible to have the following levels: `front`, `rear`, `four wheel`.
+12. The `drv` variable describes if the car has front drive (`f`), rear drive (`r`), or four wheel drive (`4`). Let's make better labels for these values! Specifically, use the `case_when()` function to change the `drv` variable to have the following levels: `front`, `rear`, `four wheel`.
 
 ```{r}
-
+mpg <- mpg |>
+  mutate(drv = case_when(
+    drv == "f" ~ "front",
+    drv == "r" ~ "rear",
+    drv == "4" ~ "four_wheel"
+  ))
 ```
 
 (string split + remove extra ")" ) 13. The `trans` variable contains two pieces of information, (1) the transmission style (`auto` or `manual`) and the specific type of transmission (e.g., `l5`, `m5`). Using the `str_split()` function, create a new variable (`trans_type`) containing the specific type of transmission of each car. Once you've made this new variable, use the `rename()` function to change the name of the `trans` column to `trans_style`.\
 *Hint: You will need to deal with the stray parenthesis!*
 
 ```{r}
-
+mpg <- mpg |>
+  mutate(trans_stype = str_split(trans, "  ")); mpg
 ```
 
 ## Getting to know your classmates
