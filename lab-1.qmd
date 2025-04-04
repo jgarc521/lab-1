@@ -69,8 +69,9 @@ ggplot(data = mpg,
 ```{r}
 
 #| label: sidebyside
-#| ncol: 2
-#| nrow: 1
+#| layout-ncol: 2
+#| fig-width: 6
+#| fig-height: 5
 
 ggplot(data = mpg, 
        mapping = aes(y = manufacturer, x = hwy)) + 
@@ -140,7 +141,14 @@ mpg <- mpg |>
 
 ```{r}
 mpg <- mpg |>
-  mutate(trans_stype = str_split(trans, "  ")); mpg
+  mutate(
+    trans_type = str_split(trans, "\\(", simplify = TRUE), # split string  at first parenthesis(as matrix)
+    trans_type = trans_type[,2], # index to get trans type
+    trans_type = str_replace(trans_type, "\\)", "") # remove extra parenthesis
+  ) |>
+  rename(trans_style = trans) # rename
+
+head(mpg)
 ```
 
 ## Getting to know your classmates
